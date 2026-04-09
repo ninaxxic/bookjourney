@@ -1,0 +1,18 @@
+@import url('https://fonts.googleapis.com/css2?family=Amatic+SC:wght@400;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Noto+Serif+TC:wght@400;500;600;700&family=IM+Fell+English:ital@0;1&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-serif-tc: "Noto Serif TC", serif;
+  --font-amatic: "Amatic SC", cursive;
+  --font-display: "IM Fell English", serif;
+  --font-cormorant: "Cormorant Garamond", serif;
+  
+  --color-brand-blue: #1a4fb0;
+  --color-paper: #fdfaf6;
+}
+
+@layer base {
+  body {
+    @apply bg-paper text-stone-800 font-serif-tc;
+  }
+}
