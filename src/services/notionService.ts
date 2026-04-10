@@ -1,16 +1,3 @@
-export const NOTION_SESSION_DATA = {
-  userName: "UNDEFINED",
-  time: "UNDEFINED",
-  timezone: "UNDEFINED",
-  quote_en: "UNDEFINED",
-  quote_zh: "UNDEFINED",
-  source: "UNDEFINED",
-  author: "UNDEFINED",
-  genre: "UNDEFINED",
-  keywords: [],
-  image: "UNDEFINED",
-};
-
 export async function pushToNotion(payload: {
   userName: string;
   time: string;

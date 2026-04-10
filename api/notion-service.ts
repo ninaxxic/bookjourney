@@ -72,6 +72,7 @@ export default async function handler(req: any, res: any) {
       body: JSON.stringify({
         parent: {
           database_id: NOTION_DATABASE_ID,
+          page_id:"33ca3349122180cfa2d4cf0e40f6393b",
         },
         properties: {
           // Assumes quote_en is the Title property in Notion
