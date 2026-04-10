@@ -1,11 +1,11 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { LiteraryQuoteGemini } from "../types";
 
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || "" });
+const ai = new GoogleGenAI({ apiKey: env.GEMINI_API_KEY || "" });
 
 export async function getGeminiData(quote: string, source: string, author: string): Promise<LiteraryQuoteGemini> {
-
-  console.log({process, env});
+  console.log(env);
+  console.log(process);
 
   const prompt = `According to this quote: "${quote}". 
     1. Extract 3-5 diverse and visually evocative keywords or short phrases (in English) that capture the visual scene, mood, or specific objects. 
