@@ -22,7 +22,7 @@ export interface LiteraryQuoteCSV{
       quote_zh:string; // translated quote 
       source:string; // book name
       author:string; // author
-      sfw:string; // ?? 
+      sfw?:string; // optional content-safety flag
 }
 
 export type LiteraryQuote = LiteraryQuoteCSV & LiteraryQuoteGemini & LiteraryQuoteUnsplash;
