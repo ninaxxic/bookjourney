@@ -10,6 +10,8 @@ export default defineConfig(({mode}) => {
     define: {
       'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY),
       'process.env.UNSPLASH_ACCESS_KEY': JSON.stringify(env.UNSPLASH_ACCESS_KEY),
+      'process.env.NOTION_API_KEY': JSON.stringify(env.NOTION_API_KEY),
+      'process.env.NOTION_DATABASE_ID': JSON.stringify(env.NOTION_DATABASE_ID),
     },
     resolve: {
       alias: {

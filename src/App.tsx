@@ -17,6 +17,7 @@ import { Postcard } from './types';
 import { ArrowLeft, X } from 'lucide-react';
 import { cn } from './lib/utils';
 import { LiteraryQuote } from './types';
+import { pushToNotion } from './services/notionService';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<'home' | 'journal'>('home');
@@ -66,7 +67,7 @@ export default function App() {
       
       // MAIN QUOTE FETCHING
       const csvQuote = await getTimeCSVQuote(); // Get csv data
-      const geminiData = await  getGeminiData(csvQuote.quote_en, csvQuote.source, csvQuote.author); // Get Gemini data
+      const geminiData = await getGeminiData(csvQuote.quote_en, csvQuote.source, csvQuote.author); // Get Gemini data
       const cover = await fetchImageByKeywords([csvQuote.source]); // Get Unsplash data (cover)
 
       const quote:LiteraryQuote = {
@@ -86,6 +87,18 @@ export default function App() {
       };
       
       setCurrentPostcard(newPostcard);
+      pushToNotion({
+        userName: currentUser || "UNDEFINED", 
+        time: timeStr,
+        timezone: quote.timezone,
+        quote_en: quote.quote_en,
+        quote_zh: quote.quote_zh,
+        source: quote.source,
+        author: quote.author,
+        genre: quote.genre || "UNDEFINED",
+        keywords: quote.keywords || [],
+        image: cover,
+      });
     } catch (err) {
       console.error('Travel error:', err);
       setError('時空穿梭失敗，請稍後再試。');
