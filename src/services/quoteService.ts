@@ -1,19 +1,13 @@
 import { LiteraryQuoteCSV, LiteraryQuote } from '../types';
 
+// Global variable
 let QUOTES: Record<string, Array<LiteraryQuote>> = {};
-let quotesLoaded: Promise<Record<string, Array<LiteraryQuote>>> | null = null;
-
-async function ensureQuotesLoaded() {
-  if (!quotesLoaded) {
-    quotesLoaded = loadQuotesFromCSV('/data/clock_translated.csv');
-  }
-  return quotesLoaded;
-}
+await loadQuotesFromCSV("/data/clock_translated.csv");
 
 /**
  * Load CSV and group rows by time (first column)
  */
-async function loadQuotesFromCSV(csvUrl: string) {
+async function loadQuotesFromCSV(csvUrl) {
   const response = await fetch(csvUrl);
 
   if (!response.ok) {
@@ -28,15 +22,15 @@ async function loadQuotesFromCSV(csvUrl: string) {
     .filter(Boolean);
 
   const firstLine = lines[0]?.toLowerCase();
-  const hasHeader = firstLine === 'time|timezone|quote_en|quote_zh|source|author|sfw';
+  const hasHeader = firstLine === "time|timezone|quote_en|quote_zh|source|author|sfw";
   const dataLines = hasHeader ? lines.slice(1) : lines;
 
-  const result: Record<string, LiteraryQuoteCSV[]> = {};
+  const result = {};
 
   dataLines.forEach((line, index) => {
-    const parts = line.split('|');
+    const parts = line.split("|");
 
-    if (parts.length < 6) {
+    if (parts.length < 7) {
       console.warn(`Skipping invalid row ${index + 1}`);
       return;
     }
@@ -48,10 +42,10 @@ async function loadQuotesFromCSV(csvUrl: string) {
       quote_zh,
       source,
       author,
-      sfw = '',
+      sfw,
     ] = parts.map(v => v.trim());
 
-    const row: LiteraryQuoteCSV = {
+    const row:LiteraryQuoteCSV = {
       time,
       timezone,
       quote_en,
@@ -68,6 +62,7 @@ async function loadQuotesFromCSV(csvUrl: string) {
     result[time].push(row);
   });
 
+  // Optional: sort keys (important if you iterate later)
   QUOTES = Object.fromEntries(
     Object.entries(result).sort(([a], [b]) => a.localeCompare(b))
   ) as typeof QUOTES;
@@ -76,28 +71,33 @@ async function loadQuotesFromCSV(csvUrl: string) {
 }
 
 export async function getTimeCSVQuote(): Promise<LiteraryQuoteCSV> {
-  await ensureQuotesLoaded();
-
   const now = new Date();
+
+  // Convert current time to minutes index (0–1439)
   let currentIndex = now.getHours() * 60 + now.getMinutes();
 
+  // Helper: index → "HH:MM"
   const indexToTime = (index: number) => {
     const h = Math.floor(index / 60);
     const m = index % 60;
-    return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+    return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
   };
 
+  // Loop max 1440 times (full day safety)
   for (let i = 0; i < 1440; i++) {
     const timeKey = indexToTime(currentIndex);
     const bucket = QUOTES?.[timeKey];
 
     if (bucket && bucket.length > 0) {
       const randomIndex = Math.floor(Math.random() * bucket.length);
-      return bucket[randomIndex];
+      const quote = bucket[randomIndex];
+      return quote;
     }
 
+    // Move to next minute (wrap around 24h)
     currentIndex = (currentIndex + 1) % 1440;
   }
 
-  throw new Error('No quotes available in QUOTES dataset');
+  // Fallback (no quotes at all)
+  throw new Error("No quotes available in QUOTES dataset");
 }

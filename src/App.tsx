@@ -11,7 +11,7 @@ import { PostcardView } from './components/PostcardView';
 import { JournalView } from './components/JournalView';
 import { LoginPage } from './components/LoginPage';
 import { getTimeCSVQuote} from './services/quoteService';
-import { collectPostcardToNotion, getGeminiDataFromApi } from './services/apiService';
+import { getGeminiData} from './services/geminiService';
 import { fetchImageByKeywords } from './services/unsplashService';
 import { Postcard } from './types';
 import { ArrowLeft, X } from 'lucide-react';
@@ -65,11 +65,11 @@ export default function App() {
       const timeStr = now.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' });
       
       // MAIN QUOTE FETCHING
-      const csvQuote = await getTimeCSVQuote(); // Get local CSV data
-      const geminiData = await getGeminiDataFromApi(csvQuote.quote_en, csvQuote.source, csvQuote.author); // Get Gemini data via backend API
-      const cover = await fetchImageByKeywords([csvQuote.source]);
+      const csvQuote = await getTimeCSVQuote(); // Get csv data
+      const geminiData = await  getGeminiData(csvQuote.quote_en, csvQuote.source, csvQuote.author); // Get Gemini data
+      const cover = await fetchImageByKeywords([csvQuote.source]); // Get Unsplash data (cover)
 
-      const quote: LiteraryQuote = {
+      const quote:LiteraryQuote = {
         ...csvQuote,
         ...geminiData,
         cover,
@@ -97,11 +97,6 @@ export default function App() {
   const handleSavePostcard = async (postcard: Postcard) => {
     if (!savedPostcards.find(p => p.id === postcard.id)) {
       setSavedPostcards(prev => [postcard, ...prev]);
-      try {
-        await collectPostcardToNotion(postcard);
-      } catch (err) {
-        console.error('Failed to sync postcard to Notion:', err);
-      }
     }
   };
 
