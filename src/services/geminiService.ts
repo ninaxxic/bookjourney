@@ -5,6 +5,8 @@ const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || "" });
 
 export async function getGeminiData(quote: string, source: string, author: string): Promise<LiteraryQuoteGemini> {
 
+  console.log({process, env});
+
   const prompt = `According to this quote: "${quote}". 
     1. Extract 3-5 diverse and visually evocative keywords or short phrases (in English) that capture the visual scene, mood, or specific objects. 
     2. These keywords are for Unsplash image search. Do NOT just pick the first noun or obvious subject. 
