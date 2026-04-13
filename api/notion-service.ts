@@ -157,7 +157,10 @@ export default async function handler(req: any, res: any) {
       }),
     });
 
+    console.log(notionResponse);
+
     const notionData = await notionResponse.json();
+    console.log(notionData);
 
     if (!notionResponse.ok) {
       console.error("Notion API error:", notionData);
