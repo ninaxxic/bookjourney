@@ -1,4 +1,20 @@
-import { toISODateTime } from "@/src/lib/utils";
+//import { toISODateTime } from "@/src/lib/utils";
+
+function toISODateTime(time: string) {
+  const now = new Date();
+
+  const [hours, minutes] = time.split(":").map(Number);
+
+  const date = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate(),
+    hours,
+    minutes
+  );
+
+  return date.toISOString();
+}
 
 const NOTION_API_KEY = process.env.NOTION_API_KEY || "";
 const NOTION_DATABASE_ID = process.env.NOTION_DATABASE_ID || "";
@@ -21,11 +37,17 @@ export default async function handler(req: any, res: any) {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
+
+  console.log("Flag 1");
+  
   if (!NOTION_API_KEY || !NOTION_DATABASE_ID) {
     return res.status(500).json({
       error: "Missing NOTION_API_KEY or NOTION_DATABASE_ID",
     });
   }
+
+
+  console.log("Flag 2");
 
   try {
     const {
@@ -58,11 +80,17 @@ export default async function handler(req: any, res: any) {
       });
     }
 
+
+  console.log("Flag 3");
+
     if (!Array.isArray(keywords)) {
       return res.status(400).json({
         error: "keywords must be an array of strings",
       });
     }
+
+
+  console.log("Flag 4");
 
     const notionResponse = await fetch("https://api.notion.com/v1/pages", {
       method: "POST",
@@ -157,11 +185,16 @@ export default async function handler(req: any, res: any) {
       }),
     });
 
+
+    console.log("Flag 5");
+
     console.log(notionResponse);
 
     const notionData = await notionResponse.json();
     console.log(notionData);
 
+
+    console.log("Flag 6");
     if (!notionResponse.ok) {
       console.error("Notion API error:", notionData);
       return res.status(notionResponse.status).json({
