@@ -135,7 +135,7 @@ export default function App() {
           <button 
             onClick={() => setActiveTab('home')}
             className={cn(
-              "text-[10px] uppercase tracking-[0.2em] transition-colors font-medium font-display",
+              "text-[1rem] transition-colors font-medium font-display",
               activeTab === 'home' ? "text-brand-blue" : "text-stone-400 hover:text-stone-600"
             )}
           >
@@ -144,7 +144,7 @@ export default function App() {
           <button 
             onClick={() => setActiveTab('journal')}
             className={cn(
-              "text-[10px] uppercase tracking-[0.2em] transition-colors font-medium font-display",
+              "text-[1rem] transition-colors font-medium font-display",
               activeTab === 'journal' ? "text-brand-blue" : "text-stone-400 hover:text-stone-600"
             )}
           >
@@ -156,7 +156,7 @@ export default function App() {
               setCurrentPostcard(null);
               setActiveTab('home');
             }}
-            className="text-[10px] uppercase tracking-[0.2em] text-stone-400 hover:text-red-400 transition-colors font-medium font-display"
+            className="text-[1rem] text-stone-400 hover:text-red-400 transition-colors font-medium font-display"
           >
             Logout: {currentUser}
           </button>
@@ -179,7 +179,7 @@ export default function App() {
             transition={{ duration: 0.3, ease: "easeOut" }}
             className="md:hidden absolute top-[88px] left-0 w-full bg-[#f7f7f7] border-t border-stone-200/70 shadow-lg z-40 px-10 py-10"
           >
-            <div className="flex flex-col text-[2.1rem] uppercase tracking-[0.18em] font-display">
+            <div className="flex flex-col text-[1rem] font-display">
               <button
                 onClick={() => {
                   setActiveTab('home');
@@ -207,7 +207,7 @@ export default function App() {
                 setActiveTab('home');
                 setIsMobileMenuOpen(false);
               }}
-              className="text-left text-[2.1rem] uppercase tracking-[0.18em] font-display text-stone-400 transition-colors hover:text-red-400"
+              className="text-left text-[1rem] font-display text-stone-400 transition-colors hover:text-red-400"
             >
               Logout: {currentUser}
             </button>
