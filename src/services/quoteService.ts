@@ -7,7 +7,7 @@ await loadQuotesFromCSV("/data/clock_translated.csv");
 /**
  * Load CSV and group rows by time (first column)
  */
-async function loadQuotesFromCSV(csvUrl) {
+async function loadQuotesFromCSV(csvUrl:string) {
   const response = await fetch(csvUrl);
 
   if (!response.ok) {

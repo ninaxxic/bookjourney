@@ -3,15 +3,19 @@ function toISODateTime(time: string) {
 
   const [hours, minutes] = time.split(":").map(Number);
 
-  const date = new Date(
+  // Create a LOCAL datetime (Taiwan time)
+  const localDate = new Date(
     now.getFullYear(),
     now.getMonth(),
     now.getDate(),
     hours,
-    minutes
+    minutes,
+    0,
+    0
   );
 
-  return date.toISOString();
+  // Convert to UTC ISO string (for Notion / backend)
+  return new Date(localDate.getTime() - localDate.getTimezoneOffset() * 60000).toISOString();
 }
 
 const NOTION_API_KEY = process.env.NOTION_API_KEY || "";
