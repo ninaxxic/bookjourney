@@ -2,6 +2,7 @@ export async function pushToNotion(payload: {
   userName: string;
   time: string;
   timezone: string;
+  capturedAtISO: string;
   quote_en: string;
   quote_zh: string;
   source: string;
