@@ -97,7 +97,7 @@ export default function App() {
         author: quote.author,
         genre: quote.genre || "UNDEFINED",
         keywords: quote.keywords || [],
-        image: cover,
+        image: imageUrl,
       });
     } catch (err) {
       console.error('Travel error:', err);
