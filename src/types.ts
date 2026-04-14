@@ -32,6 +32,7 @@ export interface Postcard {
   imageUrl: string;
   quote: LiteraryQuote;
   capturedAt: string;
+  capturedAtISO: string;
   location?: string;
   username: string;
 }
