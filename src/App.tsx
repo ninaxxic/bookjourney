@@ -83,6 +83,7 @@ export default function App() {
         imageUrl,
         quote,
         capturedAt: `${timeStr}:${now.getSeconds().toString().padStart(2, '0')}`,
+        capturedAtISO: now.toISOString(),
         username: currentUser || 'Guest',
       };
       
@@ -90,7 +91,8 @@ export default function App() {
       pushToNotion({
         userName: currentUser || "UNDEFINED", 
         time: timeStr,
-        timezone: quote.timezone,
+        timezone: "Asia/Taipei",
+        capturedAtISO: newPostcard.capturedAtISO,
         quote_en: quote.quote_en,
         quote_zh: quote.quote_zh,
         source: quote.source,
