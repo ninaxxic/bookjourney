@@ -29,7 +29,7 @@ export function LoginPage({ onLogin }: LoginPageProps) {
         initial={{ opacity: 0, y: 40, rotate: -2 }}
         animate={{ opacity: 1, y: 0, rotate: 0 }}
         transition={{ duration: 0.8, ease: "easeOut" }}
-        className="relative w-full max-w-2xl aspect-[1.6/1] bg-white shadow-[20px_20px_60px_rgba(0,0,0,0.05)] border border-stone-200 p-8 md:p-12 flex flex-col md:flex-row gap-8 md:gap-0"
+        className="relative w-full max-w-2xl h-auto min-h-[640px] md:min-h-0 md:aspect-[1.6/1] bg-white shadow-[20px_20px_60px_rgba(0,0,0,0.05)] border border-stone-200 p-8 md:p-12 flex flex-col md:flex-row gap-8 md:gap-0"
       >
         {/* Postcard Texture Overlay */}
         <div className="absolute inset-0 opacity-40 pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/paper-fibers.png')]" />
