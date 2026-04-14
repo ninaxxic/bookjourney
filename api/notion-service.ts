@@ -1,21 +1,40 @@
-function toISODateTime(time: string) {
-  const now = new Date();
+const TAIPEI_TIMEZONE = "Asia/Taipei";
 
-  const [hours, minutes] = time.split(":").map(Number);
+function formatTaipeiDateTime(capturedAtISO: string) {
+  const sourceDate = new Date(capturedAtISO);
+  if (Number.isNaN(sourceDate.getTime())) {
+    throw new Error("Invalid capturedAtISO");
+  }
 
-  // Create a LOCAL datetime (Taiwan time)
-  const localDate = new Date(
-    now.getFullYear(),
-    now.getMonth(),
-    now.getDate(),
-    hours,
-    minutes,
-    0,
-    0
-  );
+  const formatter = new Intl.DateTimeFormat("en-CA", {
+    timeZone: TAIPEI_TIMEZONE,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hourCycle: "h23",
+  });
 
-  // Convert to UTC ISO string (for Notion / backend)
-  return new Date(localDate.getTime() - localDate.getTimezoneOffset() * 60000).toISOString();
+  const parts = formatter.formatToParts(sourceDate);
+  const values = Object.fromEntries(
+    parts
+      .filter((part) => part.type !== "literal")
+      .map((part) => [part.type, part.value])
+  ) as Record<string, string>;
+
+  const year = values.year;
+  const month = values.month;
+  const day = values.day;
+  const hour = values.hour;
+  const minute = values.minute;
+  const second = values.second;
+
+  return {
+    timeTaipei: `${hour}:${minute}`,
+    capturedAtTaipeiISO: `${year}-${month}-${day}T${hour}:${minute}:${second}+08:00`,
+  };
 }
 
 const NOTION_API_KEY = process.env.NOTION_API_KEY || "";
@@ -25,6 +44,7 @@ type NotionServiceBody = {
   userName: string;
   time: string;
   timezone: string;
+  capturedAtISO: string;
   quote_en: string;
   quote_zh: string;
   source: string;
@@ -50,8 +70,7 @@ export default async function handler(req: any, res: any) {
   try {
     const {
       userName,
-      time,
-      timezone,
+      capturedAtISO,
       quote_en,
       quote_zh,
       source,
@@ -63,8 +82,7 @@ export default async function handler(req: any, res: any) {
 
     if (
       !userName ||
-      !time ||
-      !timezone ||
+      !capturedAtISO ||
       !quote_en ||
       !quote_zh ||
       !source ||
@@ -74,7 +92,7 @@ export default async function handler(req: any, res: any) {
     ) {
       return res.status(400).json({
         error:
-          "Missing required fields: userName, time, timezone, quote_en, quote_zh, source, author, genre, image",
+          "Missing required fields: userName, capturedAtISO, quote_en, quote_zh, source, author, genre, image",
       });
     }
 
@@ -85,6 +103,8 @@ export default async function handler(req: any, res: any) {
         error: "keywords must be an array of strings",
       });
     }
+
+    const { timeTaipei, capturedAtTaipeiISO } = formatTaipeiDateTime(capturedAtISO);
 
 
     const notionResponse = await fetch("https://api.notion.com/v1/pages", {
@@ -119,18 +139,27 @@ export default async function handler(req: any, res: any) {
             ],
           },
           time: {
-            date: {
-              start: toISODateTime(time),
-            },
+            rich_text: [
+              {
+                text: {
+                  content: timeTaipei,
+                },
+              },
+            ],
           },
           timezone: {
             rich_text: [
               {
                 text: {
-                  content: timezone,
+                  content: TAIPEI_TIMEZONE,
                 },
               },
             ],
+          },
+          capturedAtTaipei: {
+            date: {
+              start: capturedAtTaipeiISO,
+            },
           },
           quote_zh: {
             rich_text: [
