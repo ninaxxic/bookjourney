@@ -5,7 +5,6 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Navbar } from './components/Navbar';
 import { BookButton } from './components/BookButton';
 import { PostcardView } from './components/PostcardView';
 import { JournalView } from './components/JournalView';
@@ -14,7 +13,7 @@ import { getTimeCSVQuote} from './services/quoteService';
 import { getGeminiData} from './services/geminiService';
 import { fetchImageByKeywords } from './services/unsplashService';
 import { Postcard } from './types';
-import { ArrowLeft, X } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { cn } from './lib/utils';
 import { LiteraryQuote } from './types';
 import { pushToNotion } from './services/notionService';
@@ -26,6 +25,7 @@ export default function App() {
   const [currentUser, setCurrentUser] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // Load saved postcards and user from local storage
   useEffect(() => {
@@ -128,10 +128,10 @@ export default function App() {
       {/* Header */}
       <header className="p-8 flex justify-between items-center relative z-30">
         <div className="flex items-center gap-2">
-          <img src="/logo.svg" alt="Book Journey Logo" className="w-[32px] h-[32px] rounded-lg object-cover" referrerPolicy="no-referrer" />
+          <img src="/logo.svg" alt="Book Journey Logo" className="w-6 h-6 md:w-8 md:h-8 rounded-lg object-cover" referrerPolicy="no-referrer" />
           <span className="font-bold tracking-tight text-stone-900 font-display hidden md:inline">Book Journey</span>
         </div>
-        <div className="flex gap-8 items-center">
+        <div className="hidden md:flex gap-8 items-center">
           <button 
             onClick={() => setActiveTab('home')}
             className={cn(
@@ -139,7 +139,7 @@ export default function App() {
               activeTab === 'home' ? "text-brand-blue" : "text-stone-400 hover:text-stone-600"
             )}
           >
-            [ Travel ]
+            Travel
           </button>
           <button 
             onClick={() => setActiveTab('journal')}
@@ -148,7 +148,7 @@ export default function App() {
               activeTab === 'journal' ? "text-brand-blue" : "text-stone-400 hover:text-stone-600"
             )}
           >
-            [ Journal ]
+            Journal
           </button>
           <button 
             onClick={() => {
@@ -158,10 +158,62 @@ export default function App() {
             }}
             className="text-[10px] uppercase tracking-[0.2em] text-stone-400 hover:text-red-400 transition-colors font-medium font-display"
           >
-            [ Logout: {currentUser} ]
+            Logout: {currentUser}
           </button>
         </div>
+        <button
+          className="md:hidden text-stone-500 hover:text-stone-800 transition-colors"
+          onClick={() => setIsMobileMenuOpen(prev => !prev)}
+          aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
+        >
+          {isMobileMenuOpen ? <X size={34} /> : <Menu size={30} />}
+        </button>
       </header>
+
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.nav
+            initial={{ opacity: 0, y: -16 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -16 }}
+            transition={{ duration: 0.3, ease: "easeOut" }}
+            className="md:hidden absolute top-[88px] left-0 w-full bg-[#f7f7f7] border-t border-stone-200/70 shadow-lg z-40 px-10 py-10"
+          >
+            <div className="flex flex-col text-[2.1rem] uppercase tracking-[0.18em] font-display">
+              <button
+                onClick={() => {
+                  setActiveTab('home');
+                  setIsMobileMenuOpen(false);
+                }}
+                className={cn("text-left transition-colors", activeTab === 'home' ? "text-brand-blue" : "text-stone-400")}
+              >
+                Travel
+              </button>
+              <button
+                onClick={() => {
+                  setActiveTab('journal');
+                  setIsMobileMenuOpen(false);
+                }}
+                className={cn("text-left mt-8 transition-colors", activeTab === 'journal' ? "text-brand-blue" : "text-stone-400")}
+              >
+                Journal
+              </button>
+            </div>
+            <div className="h-px w-full bg-stone-200 my-10" />
+            <button
+              onClick={() => {
+                setCurrentUser(null);
+                setCurrentPostcard(null);
+                setActiveTab('home');
+                setIsMobileMenuOpen(false);
+              }}
+              className="text-left text-[2.1rem] uppercase tracking-[0.18em] font-display text-stone-400 transition-colors hover:text-red-400"
+            >
+              Logout: {currentUser}
+            </button>
+          </motion.nav>
+        )}
+      </AnimatePresence>
 
       <main className="flex-1 flex flex-col items-center justify-center relative overflow-hidden">
         <AnimatePresence mode="wait">

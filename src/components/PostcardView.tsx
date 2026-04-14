@@ -199,11 +199,11 @@ export function PostcardView({ postcard, onSave, isSaved, onBack }: PostcardView
               initial={{ opacity: 0, scale: 0.9, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              className="relative w-full max-w-2xl bg-[#fdfaf6] rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row"
+              className="relative w-full max-w-2xl bg-[#fdfaf6] rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row max-h-[90vh]"
             >
               <button 
                 onClick={() => setShowBookInfo(false)}
-                className="absolute top-4 right-4 z-10 p-2 bg-white/80 rounded-full text-stone-500 hover:text-stone-900 transition-colors"
+                className="absolute top-4 right-4 z-50 p-2 bg-white shadow-md rounded-full text-stone-500 hover:text-stone-900 transition-colors"
               >
                 <CloseIcon size={20} />
               </button>
@@ -226,7 +226,7 @@ export function PostcardView({ postcard, onSave, isSaved, onBack }: PostcardView
               </div>
 
               {/* Book Details */}
-              <div className="w-full md:w-3/5 p-8 md:p-10 flex flex-col justify-center space-y-6">
+              <div className="w-full md:w-3/5 p-8 md:p-10 flex flex-col justify-center space-y-6 overflow-y-auto">
                 <div className="space-y-2">
                   <p className="text-xs font-display tracking-[0.2em] text-stone-400 uppercase">
                     {postcard.quote.genre || 'Literary Work'}
